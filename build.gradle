@@ -1,0 +1,38 @@
+plugins {
+    id 'org.springframework.boot' version '2.1.3.RELEASE'
+    id 'java'
+    id 'com.google.cloud.tools.jib' version '1.0.2'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.apache.poi:poi:4.0.1'
+    implementation 'org.apache.poi:poi-ooxml:4.0.1'
+}
+
+jib {
+    from {
+        // Using an openjdk image like slim-stretch will work
+        // image = "openjdk:11.0.2-jdk-slim-stretch"
+
+        // Using the distroless java11 will fail on startup
+        image = "francium25/fontconfig-distroless-java11"
+    }
+    to {
+        image = "bentsolheim/distroless-java11-fontfail"
+    }
+    container {
+        jvmFlags = ['-Djava.awt.headless=true', '-Dsun.java2d.debugfonts=true']
+    }
+}
+
